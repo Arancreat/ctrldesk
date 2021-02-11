@@ -67,7 +67,7 @@ void Render::render()
 {
     //TODO: Support of multiple screens
 
-    SDL_Rect stretchRect{ 0, 0, 2560, 1440 }; //wtf... TODO: Get width and height of screen from system
+    SDL_Rect stretchRect{ 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)}; //wtf... TODO: This method is not great if you're using DPI upscale. 
     SDL_RenderCopy(renderer, textures[currNum], nullptr, &stretchRect);
     SDL_RenderPresent(renderer);
 }
