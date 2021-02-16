@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
         return cli.getError();
     }
 
+    //TODO: CFG file
+
     //Main algorithm
     //TODO: Optimize it
 
@@ -35,7 +37,7 @@ int main(int argc, char* argv[])
     if (render.init(path_vector)) {
         render.loop();
         render.closeSDL();
-    } 
+    }
     else
     {
         render.closeSDL();

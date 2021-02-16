@@ -65,10 +65,12 @@ void Render::clearRenderer()
 
 void Render::render()
 {
-    //TODO: Support of multiple screens
+    //TODO: This method is not great if you're using DPI upscale. 
+    for (int i = 0; i < displayNum; i++)
+    {
+        SDL_RenderCopy(renderer, textures[currNum], nullptr, &rect[i]);
+    }
 
-    SDL_Rect stretchRect{ 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)}; //wtf... TODO: This method is not great if you're using DPI upscale. 
-    SDL_RenderCopy(renderer, textures[currNum], nullptr, &stretchRect);
     SDL_RenderPresent(renderer);
 }
 
@@ -100,6 +102,7 @@ Render::Render()
 
 bool Render::init(vector <string> path_vector) 
 {
+    //SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO) < 0) 
     {
         cout << "SDL couldn't initialize: " << SDL_GetError() << endl;
@@ -107,6 +110,7 @@ bool Render::init(vector <string> path_vector)
     }
     else 
     {
+        //Getting desktop window 
         window = SDL_CreateWindowFrom((void*)getWallpaperWindow());
         if (window == nullptr) 
         {
@@ -115,7 +119,8 @@ bool Render::init(vector <string> path_vector)
         }
         else 
         {
-            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+            //Creating renderer
+            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
             if (renderer == nullptr) 
             {
                 cout << "Renderer couldn't not be created: " << SDL_GetError() << endl;
@@ -123,6 +128,7 @@ bool Render::init(vector <string> path_vector)
             }
             else
             {
+                //Texture loading
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 for (vector <string>::iterator iter = path_vector.begin(); iter != path_vector.end(); ++iter)
                 {
@@ -133,11 +139,31 @@ bool Render::init(vector <string> path_vector)
                         return false;
                     }
                 }
-                return true;
+                //Getting number of displays
+                displayNum = SDL_GetNumVideoDisplays();
+
+                if (displayNum <= 0)
+                {
+                    cout << "SDL couldn't get number of available video displays: " << SDL_GetError() << endl;
+                    return false;
+                }
+                else
+                {
+                    //Getting bounds of display
+                    rect.resize(displayNum);
+                    for (int i = 0; i < displayNum; i++)
+                    {
+                        if (SDL_GetDisplayBounds(i, &rect[i]) != 0)
+                        {
+                            cout << "Display index: " << i << ". SDL_GetDisplayBounds failed: " << SDL_GetError() << endl;
+                            return false;
+                        }
+                    }
+                }
             }
         }
     }
-
+    return true;
 }
 
 void Render::loop()

@@ -54,6 +54,12 @@ class Render
 		//An array of textures
 		vector <SDL_Texture*> textures;
 
-		//A number of the chosen texture in array
+		//The number of the chosen texture in array
 		size_t currNum = 0;
+
+		//The number of available video displays
+		int displayNum = 0;
+
+		//The SDL_Rect structure filled in with displays bounds
+		vector <SDL_Rect> rect;
 };
