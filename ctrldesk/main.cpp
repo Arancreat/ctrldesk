@@ -23,7 +23,8 @@ int main(int argc, char* argv[])
 
     path_vector = cli.getPath(argv_vector);
 
-    if (cli.checkForErrors()) {
+    if (cli.checkForErrors()) 
+    {
         return cli.getError();
     }
 
@@ -34,7 +35,8 @@ int main(int argc, char* argv[])
 
     Render render = Render();
 
-    if (render.init(path_vector)) {
+    if (render.init(path_vector)) 
+    {
         render.loop();
         render.closeSDL();
     }

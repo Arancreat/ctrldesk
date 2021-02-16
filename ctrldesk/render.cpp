@@ -65,7 +65,6 @@ void Render::clearRenderer()
 
 void Render::render()
 {
-    //TODO: This method is not great if you're using DPI upscale. 
     for (int i = 0; i < displayNum; i++)
     {
         SDL_RenderCopy(renderer, textures[currNum], nullptr, &rect[i]);
